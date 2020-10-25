@@ -6,6 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+requests = "*"
+rich = "*"
+isbnlib = "*"
 
 [requires]
 python_version = "3.8"
