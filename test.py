@@ -77,7 +77,10 @@ def call_enju(query):
     data = r.json()
     results = set()
     for item in data['results']:
-        results.add(normalize_isbn(item['isbn']))
+        print(item)
+        for identifier in item['identifiers']:
+            if identifier['identifier_type'] == 'isbn':
+                results.add(normalize_isbn(identifier['body']))
     return results
 
 
@@ -92,5 +95,5 @@ for line in query_sets.splitlines():
     print(f"共通:{len(intersection)}件")
     calil_difference = r_calil.difference(r_enju)
     print(f"カーリルのみ:{len(calil_difference)}件")
-    enju_difference = r_enju.difference(calil_difference)
+    enju_difference = r_enju.difference(r_calil)
     print(f"Enjuのみ:{len(enju_difference)}件")
