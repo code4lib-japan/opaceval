@@ -50,13 +50,13 @@ def normalize_isbn(isbn: (str, None)) -> (str, None):
 
 
 def call_unitrad(query):
-    r = requests.get('https://unitrad-osaka-1.calil.jp/v1/search', params={
+    r = requests.get('https://unitrad-tokyo-1.calil.jp/v1/search', params={
         'free': query,
-        'region': 'gk-2002000-3xj40'
+        'region': 'gk-2002002-x8zrb'
     })
     data = r.json()
     while data['running']:
-        r = requests.get('https://unitrad-osaka-1.calil.jp/v1/polling', params={
+        r = requests.get('https://unitrad-tokyo-1.calil.jp/v1/polling', params={
             'uuid': data['uuid'],
             'timeout': str(10),
             'version': str(data['version']),
@@ -85,6 +85,7 @@ def call_enju(query):
 
 
 for line in query_sets.splitlines():
+    print('------------------')
     cols = line.split('\t')
     print(f"[{cols[0]}]{cols[1]}")
     r_calil = call_unitrad(cols[1])
