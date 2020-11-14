@@ -77,7 +77,7 @@ def call_enju(query):
     data = r.json()
     results = set()
     for item in data['results']:
-        print(item)
+        # print(item)
         for identifier in item['identifiers']:
             if identifier['identifier_type'] == 'isbn':
                 results.add(normalize_isbn(identifier['body']))
