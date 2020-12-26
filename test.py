@@ -72,7 +72,8 @@ def call_unitrad(query):
 def call_enju(query):
     r = requests.get('https://dev.next-l.jp/manifestations.json', params={
         'utf8': '✓',
-        'query': query
+        'query': query,
+        'per_page': '1000'
     })
     data = r.json()
     results = set()
