@@ -124,6 +124,14 @@ def call_enju(query):
                 results.add(normalize_isbn(identifier['body']))
     return results
 
+def reciprocal_rank(ranking, corrects):
+    hits = corrects.intersection(ranking)
+    if len(hits) == 0:
+        return 0.0
+    for idx, e in enumerate(ranking):
+        if e in c:
+            return ( 1.0 / (idx+1) )
+
 # 答えのテーブルをつくる
 correct={}
 for line in correct_sets.splitlines():
@@ -132,7 +140,8 @@ for line in correct_sets.splitlines():
         correct[cols[0]]=[]
     correct[cols[0]].append(normalize_isbn(cols[1]))
 
-
+metrics_calil = { "recall": [], "mrr": [] }
+metrics_enju = { "recall": [], "mrr": [] }
 for line in query_sets.splitlines():
     print('------------------')
     cols = line.split('\t')
@@ -154,4 +163,23 @@ for line in query_sets.splitlines():
         print(f"カーリル不足:{len(invlid_calil)}件")
         invlid_enju=c.difference(r_enju)
         print(f"Enju不足:{len(invlid_enju)}件")
+        print("Recall:")
+        recall = float(len(c.intersection(r_calil))) / len(c)
+        metrics_calil["recall"].append(recall)
+        print("\tカーリル: {0:.3f}".format(recall))
+        recall = float(len(c.intersection(r_enju))) / len(c)
+        metrics_enju["recall"].append(recall)
+        print("\tEnju: {0:.3f}".format(recall))
+        print("MRR:")
+        score = reciprocal_rank(r_calil, c)
+        print("\tカーリル: {0:.3f}".format(score))
+        metrics_calil["mrr"].append(score)
+        score = reciprocal_rank(r_enju, c)
+        print("\tEnju: {0:.3f}".format(score))
+        metrics_enju["mrr"].append(score)
 
+print('==================')
+print("[Recall]カーリル: {0:.3f}".format(float(sum(metrics_calil["recall"])) / len(metrics_calil["recall"])))
+print("[Recall]Enju: {0:.3f}".format(float(sum(metrics_enju["recall"])) / len(metrics_enju["recall"])))
+print("[MRR]カーリル: {0:.3f}".format(float(sum(metrics_calil["mrr"])) / len(metrics_calil["mrr"])))
+print("[MRR]Enju: {0:.3f}".format(float(sum(metrics_enju["mrr"])) / len(metrics_enju["mrr"])))
