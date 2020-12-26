@@ -29,6 +29,46 @@ QID-2020-21	夜9時からの、癒しのスープ 	高山かづえ著「癒し�
 QID-2020-22	鉄輪	夢枕獏著「陰陽師 鉄輪」を読みたい
 """
 
+correct_sets = """QID-2020-01	9784591164457
+QID-2020-02	9784041001202
+QID-2020-02	9784101010137
+QID-2020-02	9784000269735
+QID-2020-02	9784872578119
+QID-2020-02	9784003101117
+QID-2020-02	9784087520095
+QID-2020-02	9784167158026
+QID-2020-03	9784479794738
+QID-2020-04	9784344024908
+QID-2020-04	9784344425699
+QID-2020-05	9784044086121
+QID-2020-05	9784780303605
+QID-2020-05	9784780307146
+QID-2020-06	9784167148072
+QID-2020-06	9784167148089
+QID-2020-06	9784167148096
+QID-2020-06	9784167148102
+QID-2020-07	9784151200533
+QID-2020-10	9784834014778
+QID-2020-10	9784834000825
+QID-2020-11	9784480017017
+QID-2020-11	9784480020475
+QID-2020-13	9784838789801
+QID-2020-14	9784815603847
+QID-2020-15	9784762826962
+QID-2020-16	9784121020376
+QID-2020-17	9784101001524
+QID-2020-17	9784838722501
+QID-2020-17	9784838724505
+QID-2020-17	9784101001654
+QID-2020-17	9784101001685
+QID-2020-18	9784794217448
+QID-2020-19	9784478106372
+QID-2020-20	9784634349353
+QID-2020-21	9784415327587
+QID-2020-22	9784163240404
+QID-2020-22	9784167528225
+"""
+
 
 def normalize_isbn(isbn: (str, None)) -> (str, None):
     """
@@ -84,6 +124,14 @@ def call_enju(query):
                 results.add(normalize_isbn(identifier['body']))
     return results
 
+# 答えのテーブルをつくる
+correct={}
+for line in correct_sets.splitlines():
+    cols = line.split('\t')
+    if cols[0] not in correct:
+        correct[cols[0]]=[]
+    correct[cols[0]].append(normalize_isbn(cols[1]))
+
 
 for line in query_sets.splitlines():
     print('------------------')
@@ -99,3 +147,11 @@ for line in query_sets.splitlines():
     print(f"カーリルのみ:{len(calil_difference)}件")
     enju_difference = r_enju.difference(r_calil)
     print(f"Enjuのみ:{len(enju_difference)}件")
+    if cols[0] in correct:
+        print(f"正解:{len(correct[cols[0]])}件")
+        c = set(correct[cols[0]])
+        invlid_calil=c.difference(r_calil)
+        print(f"カーリル不足:{len(invlid_calil)}件")
+        invlid_enju=c.difference(r_enju)
+        print(f"Enju不足:{len(invlid_enju)}件")
+
