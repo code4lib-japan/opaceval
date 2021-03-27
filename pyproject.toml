@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "opaceval"
+version = "0.1.0"
+description = ""
+authors = ["Ryuuji Yoshimoto <ryuuji@calil.jp>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "*"
+rich = "*"
+isbnlib = "*"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
