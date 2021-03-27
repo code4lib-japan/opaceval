@@ -124,24 +124,26 @@ def call_enju(query):
                 results.add(normalize_isbn(identifier['body']))
     return results
 
+
 def reciprocal_rank(ranking, corrects):
     hits = corrects.intersection(ranking)
     if len(hits) == 0:
         return 0.0
     for idx, e in enumerate(ranking):
         if e in c:
-            return ( 1.0 / (idx+1) )
+            return (1.0 / (idx + 1))
+
 
 # 答えのテーブルをつくる
-correct={}
+correct = {}
 for line in correct_sets.splitlines():
     cols = line.split('\t')
     if cols[0] not in correct:
-        correct[cols[0]]=[]
+        correct[cols[0]] = []
     correct[cols[0]].append(normalize_isbn(cols[1]))
 
-metrics_calil = { "recall": [], "mrr": [] }
-metrics_enju = { "recall": [], "mrr": [] }
+metrics_calil = {"recall": [], "mrr": []}
+metrics_enju = {"recall": [], "mrr": []}
 for line in query_sets.splitlines():
     print('------------------')
     cols = line.split('\t')
@@ -159,9 +161,9 @@ for line in query_sets.splitlines():
     if cols[0] in correct:
         print(f"正解:{len(correct[cols[0]])}件")
         c = set(correct[cols[0]])
-        invlid_calil=c.difference(r_calil)
+        invlid_calil = c.difference(r_calil)
         print(f"カーリル不足:{len(invlid_calil)}件")
-        invlid_enju=c.difference(r_enju)
+        invlid_enju = c.difference(r_enju)
         print(f"Enju不足:{len(invlid_enju)}件")
         print("Recall:")
         recall = float(len(c.intersection(r_calil))) / len(c)
