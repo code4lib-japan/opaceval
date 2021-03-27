@@ -104,9 +104,11 @@ def call_unitrad(query):
         data = r.json()
 
     results = set()
+    results_list = []
     for item in data['books']:
         results.add(normalize_isbn(item['isbn']))
-    return results
+        results_list.append(normalize_isbn(item['isbn']))
+    return results, results_list
 
 
 def call_enju(query):
@@ -117,12 +119,14 @@ def call_enju(query):
     })
     data = r.json()
     results = set()
+    results_list = []
     for item in data['results']:
         # print(item)
         for identifier in item['identifiers']:
             if identifier['identifier_type'] == 'isbn':
                 results.add(normalize_isbn(identifier['body']))
-    return results
+                results_list.append(normalize_isbn(identifier['body']))
+    return results, results_list
 
 
 def reciprocal_rank(ranking, corrects):
@@ -148,9 +152,9 @@ for line in query_sets.splitlines():
     print('------------------')
     cols = line.split('\t')
     print(f"[{cols[0]}]{cols[1]}")
-    r_calil = call_unitrad(cols[1])
+    r_calil, list_calil = call_unitrad(cols[1])
     print(f"カーリル: {len(r_calil)}件")
-    r_enju = call_enju(cols[1])
+    r_enju, list_enju = call_enju(cols[1])
     print(f"Enju: {len(r_enju)}件")
     intersection = r_calil.intersection(r_enju)
     print(f"共通:{len(intersection)}件")
@@ -173,10 +177,10 @@ for line in query_sets.splitlines():
         metrics_enju["recall"].append(recall)
         print("\tEnju: {0:.3f}".format(recall))
         print("MRR:")
-        score = reciprocal_rank(r_calil, c)
+        score = reciprocal_rank(list_calil, c)
         print("\tカーリル: {0:.3f}".format(score))
         metrics_calil["mrr"].append(score)
-        score = reciprocal_rank(r_enju, c)
+        score = reciprocal_rank(list_enju, c)
         print("\tEnju: {0:.3f}".format(score))
         metrics_enju["mrr"].append(score)
 
