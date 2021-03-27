@@ -10,10 +10,9 @@ poetry install
 poetry run python test.py
 ```
 
-```bash
-# 2021/3/27の実行結果
-[Recall]カーリル: 1.000
-[Recall]Enju: 0.880
-[MRR]カーリル: 0.707
-[MRR]Enju: 0.696
-```
+2021/3/27の実行結果
+----
+|        | Enju  | CALIL(ISBN) | CALIL(TSV) |
+|--------|-------|-------------|------------|
+| Recall | 0.880 | 1.000       | 1.000      |
+| MRR    | 0.696 | 0.707       | 0.740      |
