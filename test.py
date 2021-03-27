@@ -92,7 +92,7 @@ def normalize_isbn(isbn: (str, None)) -> (str, None):
 def call_unitrad(query):
     r = requests.get('https://unitrad-tokyo-1.calil.jp/v1/search', params={
         'free': query,
-        'region': 'gk-2002002-x8zrb'
+        'region': 'gk-2002005-w6j41'
     })
     data = r.json()
     while data['running']:
