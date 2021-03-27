@@ -6,6 +6,7 @@ OPAC評価の実験
 ----
 
 ```bash
+pip install poetry
 poetry install
 poetry run python test.py
 ```
