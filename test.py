@@ -169,20 +169,28 @@ for line in query_sets.splitlines():
         print(f"カーリル不足:{len(invlid_calil)}件")
         invlid_enju = c.difference(r_enju)
         print(f"Enju不足:{len(invlid_enju)}件")
+        print(invlid_enju)
         print("Recall:")
         recall = float(len(c.intersection(r_calil))) / len(c)
         metrics_calil["recall"].append(recall)
         print("\tカーリル: {0:.3f}".format(recall))
+        recall_calil = recall
         recall = float(len(c.intersection(r_enju))) / len(c)
+        recall_enju = recall
         metrics_enju["recall"].append(recall)
         print("\tEnju: {0:.3f}".format(recall))
         print("MRR:")
         score = reciprocal_rank(list_calil, c)
         print("\tカーリル: {0:.3f}".format(score))
         metrics_calil["mrr"].append(score)
+        mrr_calil = score
+
         score = reciprocal_rank(list_enju, c)
         print("\tEnju: {0:.3f}".format(score))
         metrics_enju["mrr"].append(score)
+        mrr_enju = score
+
+    print(",".join(['tsv', cols[0], cols[1], "{0:.3f}".format(recall_calil), "{0:.3f}".format(mrr_calil), "{0:.3f}".format(recall_enju), "{0:.3f}".format(mrr_enju)]))
 
 print('==================')
 print("[Recall]カーリル: {0:.3f}".format(float(sum(metrics_calil["recall"])) / len(metrics_calil["recall"])))
